@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: Cache node_modules
@@ -41,14 +44,24 @@ jobs:
         with:
           name: build
           path: build
+
+      - name: ZIP Assets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          zip -r build.zip ./build
+          zip -r coverage.zip ./coverage
+        
       - name: Create a Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Deploy to staging
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         run: npx surge --project ./build --domain blushing-jellyfish.surge.sh
-        env:
-          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+
+      - name: Deploy to production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npx surge --project ./build --domain natural-birthday-prod.surge.sh
+        
