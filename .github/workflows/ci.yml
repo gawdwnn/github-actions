@@ -20,15 +20,26 @@ jobs:
       - name: Use NodeJS
         uses: actions/setup-node@v2
         with:
-          node_versions: "16.x"
+          node_version: "16.x"
       - run: npm ci
       - run: npm run format:check
       - run: npm test -- --coverage
         env:
           CI: true
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage
+          path: coverage
+
       - name: Build Project
         if: github.event_name == 'push'
         run: npm run build
+      - name: Upload build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
       - name: Deploy to staging
         if: github.event_name == 'push'
         run: npx surge --project ./build --domain blushing-jellyfish.surge.sh
