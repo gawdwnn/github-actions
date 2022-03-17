@@ -64,4 +64,9 @@ jobs:
       - name: Deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npx surge --project ./build --domain natural-birthday-prod.surge.sh
-        
+
+      - name: Upload Coverage Reports
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npx codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
