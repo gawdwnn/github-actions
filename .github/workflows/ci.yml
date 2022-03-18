@@ -23,7 +23,7 @@ jobs:
       - name: Use NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version : "16.x"
+          node-version: "16.x"
       - run: npm ci
       - run: npm run format:check
       - run: npm test -- --coverage
@@ -50,13 +50,13 @@ jobs:
         run: |
           zip -r build.zip ./build
           zip -r coverage.zip ./coverage
-        
+
       - name: Create a Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
       - name: Deploy to staging
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         run: npx surge --project ./build --domain blushing-jellyfish.surge.sh
