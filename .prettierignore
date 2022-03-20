@@ -1,6 +1,4 @@
 build
 coverage
 node_modules
-/.husky
-/.github
 package-lock.json
