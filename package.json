@@ -16,8 +16,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format:check": "prettier --check \"**/*.{js,jsx,yml,yaml,json,css,scss,md}\"",
-    "format": "prettier --write \"**/*.{js,jsx,yml,yaml,json,css,scss,md}\""
+    "prettier:check": "prettier --check \"**/*.{js,jsx,ts,tsx,yml,yaml,json,css,scss,md}\"",
+    "prettier:write": "prettier --write \"**/*.{js,jsx,ts,tsx,yml,yaml,json,css,scss,md}\"",
+    "lint": "npx eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -38,7 +39,24 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react": "^7.29.4",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
     "prettier": "^2.6.0",
     "semantic-release": "^19.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,yml,yaml,json,css,scss,md}": "prettier --write",
+    "*.js": "eslint --fix"
   }
 }
